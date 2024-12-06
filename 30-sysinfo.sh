@@ -67,7 +67,19 @@ function get_ip_addresses()
             [[ -n $tmp ]] && ips+=("$intf: \n${color}$tmp${reset}\n")
         fi
     done
-
+    for intf in apclix0; do
+        if [[ -d "/sys/class/net/$intf" ]]; then
+            local tmp=$(ip addr show dev $intf | awk '/inet/ {print $2}' | cut -d'/' -f1)
+            [[ -n $tmp ]] && ips+=("$intf: \n${color}$tmp${reset}\n")
+        fi
+    done
+    for intf in apclix1; do
+        if [[ -d "/sys/class/net/$intf" ]]; then
+            local tmp=$(ip addr show dev $intf | awk '/inet/ {print $2}' | cut -d'/' -f1)
+            [[ -n $tmp ]] && ips+=("$intf: \n${color}$tmp${reset}\n")
+        fi
+    done
+    
     # Then check for other interfaces
     for f in /sys/class/net/*; do
         local intf=$(basename $f)
